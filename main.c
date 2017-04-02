@@ -57,6 +57,24 @@ cout<<"rank = "<<myid<<" sm rank = "<<sm_rank<<endl;
     MPI_Info_create(&win_info);
     MPI_Info_set(win_info, "alloc_shared_noncontig", "true");
 
+/*
+ *Four models exist
+ ♦ MPI_WIN_CREATE
+ • You already have an allocated buffer that you
+ would like to make remotely accessible
+ ♦ MPI_WIN_ALLOCATE
+ • You want to create a buffer and directly make it
+ remotely accessible
+ ♦ MPI_WIN_CREATE_DYNAMIC
+ • You don’t have a buffer yet, but will have one in
+ the future
+ ♦ MPI_WIN_ALLOCATE_SHARED
+ • You want multiple processes on the same node
+ share a buffer
+ * */
+
+    //int MPI_Win_allocate_shared(MPI_Aint size, int disp_unit, MPI_Info info, MPI_Comm comm,
+    //                             void *baseptr, MPI_Win *win)
 
 MPI_Aint k = 0;
 if(sm_rank==0) k = sm_size;
@@ -67,6 +85,8 @@ if(sm_rank==0) k = sm_size;
 
     MPI_Win_lock_all(0 , sm_win);
     MPI_Win_sync(sm_win);
+
+
     MPI_Barrier(shmcomm);
 
     MPI_Aint b_size[sm_size];
